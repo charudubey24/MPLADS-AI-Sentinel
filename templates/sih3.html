@@ -1,0 +1,2271 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>MPLADS AI Sentinel | Smart Governance</title>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<style>
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Inter, Segoe UI, Arial, sans-serif;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    background: #f4f7fb;
+    color: #172033;
+    overflow-x: hidden;
+}
+
+/* ==========================================
+   SIDEBAR
+   ========================================== */
+
+.sidebar {
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 245px;
+    height: 100vh;
+    background: linear-gradient(180deg, #071a36, #0d2d59);
+    color: white;
+    padding: 25px 18px;
+    z-index: 1000;
+    transition: all .3s ease;
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 45px;
+}
+
+.logo-icon {
+    width: 42px;
+    height: 42px;
+    flex-shrink: 0;
+    border-radius: 12px;
+    background: #2d8cff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 21px;
+}
+
+.logo h2 {
+    font-size: 17px;
+}
+
+.logo span {
+    display: block;
+    font-size: 11px;
+    opacity: .65;
+    margin-top: 2px;
+}
+
+.menu {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.menu-item {
+    padding: 13px 15px;
+    border-radius: 10px;
+    color: #c9d5e8;
+    cursor: pointer;
+    transition: .3s;
+}
+
+.menu-item:hover,
+.menu-item.active {
+    background: rgba(255,255,255,.1);
+    color: white;
+    transform: translateX(3px);
+}
+
+.menu-item span {
+    margin-right: 12px;
+}
+
+/* ==========================================
+   MAIN
+   ========================================== */
+
+.main {
+    margin-left: 245px;
+    padding: 28px 35px;
+    min-height: 100vh;
+    transition: all .3s ease;
+}
+
+/* ==========================================
+   HEADER
+   ========================================== */
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 20px;
+    margin-bottom: 28px;
+}
+
+.header h1 {
+    font-size: 27px;
+}
+
+.header p {
+    color: #7a8497;
+    margin-top: 5px;
+    font-size: 14px;
+}
+
+.user {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.avatar {
+    width: 42px;
+    height: 42px;
+    flex-shrink: 0;
+    border-radius: 50%;
+    background: linear-gradient(135deg,#2d8cff,#7b61ff);
+    color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-weight: bold;
+}
+
+/* ==========================================
+   CARDS
+   ========================================== */
+
+.card {
+    background: white;
+    border-radius: 16px;
+    padding: 20px;
+    box-shadow: 0 5px 25px rgba(20,40,80,.06);
+    border: 1px solid #edf0f5;
+}
+
+.stats {
+    display: grid;
+    grid-template-columns: repeat(4,1fr);
+    gap: 18px;
+    margin-bottom: 22px;
+}
+
+.stat {
+    position: relative;
+    overflow: hidden;
+}
+
+.stat-icon {
+    width: 42px;
+    height: 42px;
+    border-radius: 11px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #edf5ff;
+    margin-bottom: 15px;
+}
+
+.stat h3 {
+    font-size: 25px;
+}
+
+.stat p {
+    font-size: 13px;
+    color: #7c8798;
+    margin-top: 4px;
+}
+
+.green {
+    color: #13a36d;
+}
+
+.red {
+    color: #e44747;
+}
+
+.orange {
+    color: #e89a17;
+}
+
+/* ==========================================
+   GRID
+   ========================================== */
+
+.grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 20px;
+    margin-bottom: 20px;
+}
+
+.card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.card-header h2 {
+    font-size: 17px;
+}
+
+.badge {
+    padding: 6px 10px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: bold;
+    background: #eaf4ff;
+    color: #287bdc;
+    white-space: nowrap;
+}
+
+/* ==========================================
+   CHART
+   ========================================== */
+
+.chart-container {
+    height: 280px;
+    width: 100%;
+    position: relative;
+}
+
+/* ==========================================
+   AI PANEL
+   ========================================== */
+
+.ai-panel {
+    background: linear-gradient(145deg,#071a36,#103a6d);
+    color: white;
+    position: relative;
+    overflow: hidden;
+}
+
+.ai-panel::before {
+    content: "";
+    position: absolute;
+    width: 200px;
+    height: 200px;
+    border-radius: 50%;
+    border: 1px solid rgba(255,255,255,.08);
+    right: -70px;
+    top: -60px;
+    pointer-events: none;
+}
+
+.ai-title {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.ai-icon {
+    width: 40px;
+    height: 40px;
+    flex-shrink: 0;
+    border-radius: 12px;
+    background: #2d8cff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.risk {
+    margin: 28px 0;
+    text-align: center;
+}
+
+.risk-circle {
+    width: 135px;
+    height: 135px;
+    margin: auto;
+    border-radius: 50%;
+    border: 10px solid #27c78a;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    transition: .5s;
+}
+
+.risk-circle strong {
+    font-size: 34px;
+}
+
+.risk-circle small {
+    opacity: .7;
+}
+
+.ai-status {
+    background: rgba(255,255,255,.08);
+    padding: 12px;
+    border-radius: 10px;
+    font-size: 12px;
+    line-height: 1.5;
+}
+
+.ai-button {
+    width: 100%;
+    margin-top: 18px;
+    padding: 13px;
+    border: none;
+    border-radius: 10px;
+    background: #2d8cff;
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
+    font-size: 13px;
+    transition: .3s;
+}
+
+.ai-button:hover {
+    background: #1b73dc;
+    transform: translateY(-2px);
+}
+
+.ai-button:disabled {
+    opacity: .6;
+    cursor: wait;
+}
+
+.ai-result {
+    display: none;
+    margin-top: 18px;
+    padding: 15px;
+    border-radius: 12px;
+    background: rgba(255,255,255,.08);
+    font-size: 12px;
+    line-height: 1.5;
+}
+
+.ai-result h3 {
+    margin-bottom: 10px;
+}
+
+.ai-result ul {
+    margin-left: 20px;
+}
+
+.ai-result li {
+    margin-bottom: 7px;
+}
+
+/* ==========================================
+   INPUT PANEL
+   ========================================== */
+
+.input-card {
+    margin-bottom: 20px;
+}
+
+.input-grid {
+    display: grid;
+    grid-template-columns: repeat(3,1fr);
+    gap: 15px;
+}
+
+.input-group label {
+    display: block;
+    font-size: 12px;
+    font-weight: bold;
+    color: #687386;
+    margin-bottom: 6px;
+}
+
+.input-group input {
+    width: 100%;
+    padding: 11px;
+    border: 1px solid #dfe5ed;
+    border-radius: 8px;
+    outline: none;
+    font-size: 13px;
+}
+
+.input-group input:focus {
+    border-color: #2d8cff;
+}
+
+/* ==========================================
+   ALERTS
+   ========================================== */
+
+.alert {
+    display: flex;
+    gap: 14px;
+    padding: 14px;
+    border-bottom: 1px solid #edf0f5;
+}
+
+.alert:last-child {
+    border-bottom: none;
+}
+
+.alert-icon {
+    min-width: 38px;
+    height: 38px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.alert-danger {
+    background: #fff0f0;
+    color: #e44747;
+}
+
+.alert-warning {
+    background: #fff7e7;
+    color: #df9819;
+}
+
+.alert-info {
+    background: #eaf4ff;
+    color: #287bdc;
+}
+
+.alert h4 {
+    font-size: 13px;
+    margin-bottom: 4px;
+}
+
+.alert p {
+    color: #818b9c;
+    font-size: 11px;
+}
+
+/* ==========================================
+   TABLE
+   ========================================== */
+
+.table-card {
+    margin-bottom: 30px;
+}
+
+.table-wrapper {
+    width: 100%;
+    overflow-x: auto;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 650px;
+}
+
+th {
+    text-align: left;
+    color: #7b8595;
+    font-size: 11px;
+    text-transform: uppercase;
+    padding: 12px;
+    border-bottom: 1px solid #edf0f5;
+}
+
+td {
+    padding: 15px 12px;
+    font-size: 13px;
+    border-bottom: 1px solid #f0f2f6;
+}
+
+.status {
+    padding: 5px 9px;
+    border-radius: 15px;
+    font-size: 10px;
+    font-weight: bold;
+    white-space: nowrap;
+}
+
+.completed {
+    background: #e7faf2;
+    color: #15996a;
+}
+
+.progress {
+    background: #eaf4ff;
+    color: #287bdc;
+}
+
+.flagged {
+    background: #fff0f0;
+    color: #e44747;
+}
+
+.project {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.project-icon {
+    width: 34px;
+    height: 34px;
+    flex-shrink: 0;
+    background: #edf5ff;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.progress-bar {
+    height: 6px;
+    width: 90px;
+    background: #edf0f5;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.progress-fill {
+    height: 100%;
+    background: #287bdc;
+}
+
+/* ==========================================
+   FOOTER
+   ========================================== */
+
+.footer {
+    text-align: center;
+    color: #8b95a5;
+    font-size: 11px;
+    padding: 20px;
+}
+
+/* ==========================================
+   ANIMATION
+   ========================================== */
+
+.fade {
+    animation: fade .7s ease;
+}
+
+@keyframes fade {
+
+    from {
+        opacity: 0;
+        transform: translateY(12px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+}
+
+/* ==========================================
+   TABLET
+   ========================================== */
+
+@media (max-width: 1100px) {
+
+    .main {
+        padding: 25px;
+    }
+
+    .stats {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .grid {
+        grid-template-columns: 1fr;
+    }
+
+    .input-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+}
+
+/* ==========================================
+   MOBILE
+   ========================================== */
+
+@media (max-width: 700px) {
+
+    body {
+        font-size: 14px;
+    }
+
+    /* Sidebar becomes a top bar */
+
+    .sidebar {
+        position: relative;
+        width: 100%;
+        height: auto;
+        min-height: auto;
+        padding: 12px 15px;
+    }
+
+    .logo {
+        margin-bottom: 12px;
+    }
+
+    .logo h2 {
+        font-size: 15px;
+    }
+
+    .logo span {
+        font-size: 10px;
+    }
+
+    .logo-icon {
+        width: 38px;
+        height: 38px;
+    }
+
+    /* Horizontal scrolling menu */
+
+    .menu {
+        flex-direction: row;
+        gap: 6px;
+        overflow-x: auto;
+        padding-bottom: 3px;
+        scrollbar-width: none;
+    }
+
+    .menu::-webkit-scrollbar {
+        display: none;
+    }
+
+    .menu-item {
+        flex: 0 0 auto;
+        padding: 9px 11px;
+        font-size: 11px;
+        white-space: nowrap;
+    }
+
+    .menu-item span {
+        margin-right: 5px;
+    }
+
+    .menu-item:hover,
+    .menu-item.active {
+        transform: none;
+    }
+
+    /* Main */
+
+    .main {
+        margin-left: 0;
+        padding: 18px 12px;
+        width: 100%;
+    }
+
+    /* Header */
+
+    .header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 15px;
+        margin-bottom: 20px;
+    }
+
+    .header h1 {
+        font-size: 22px;
+        line-height: 1.2;
+    }
+
+    .header p {
+        font-size: 12px;
+        line-height: 1.5;
+    }
+
+    .user {
+        width: 100%;
+        justify-content: flex-end;
+    }
+
+    .user strong {
+        font-size: 12px;
+    }
+
+    .user p {
+        font-size: 10px;
+    }
+
+    /* Statistics */
+
+    .stats {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 10px;
+        margin-bottom: 14px;
+    }
+
+    .card {
+        padding: 15px;
+        border-radius: 13px;
+    }
+
+    .stat-icon {
+        width: 35px;
+        height: 35px;
+        font-size: 15px;
+        margin-bottom: 10px;
+    }
+
+    .stat h3 {
+        font-size: 19px;
+    }
+
+    .stat p {
+        font-size: 10px;
+        line-height: 1.4;
+    }
+
+    /* Card headers */
+
+    .card-header {
+        align-items: flex-start;
+        flex-wrap: wrap;
+        margin-bottom: 15px;
+    }
+
+    .card-header h2 {
+        font-size: 15px;
+    }
+
+    .badge {
+        font-size: 9px;
+        padding: 5px 8px;
+    }
+
+    /* Inputs */
+
+    .input-grid {
+        grid-template-columns: 1fr;
+        gap: 12px;
+    }
+
+    .input-group input {
+        padding: 12px;
+    }
+
+    /* Chart */
+
+    .chart-container {
+        height: 230px;
+    }
+
+    /* Grid */
+
+    .grid {
+        grid-template-columns: 1fr;
+        gap: 14px;
+    }
+
+    /* AI */
+
+    .ai-panel {
+        padding: 17px;
+    }
+
+    .ai-title h2 {
+        font-size: 16px;
+    }
+
+    .ai-title small {
+        font-size: 10px;
+    }
+
+    .risk {
+        margin: 22px 0;
+    }
+
+    .risk-circle {
+        width: 115px;
+        height: 115px;
+        border-width: 8px;
+    }
+
+    .risk-circle strong {
+        font-size: 29px;
+    }
+
+    .ai-status {
+        font-size: 11px;
+    }
+
+    .ai-button {
+        padding: 14px 10px;
+        font-size: 12px;
+    }
+
+    /* Alerts */
+
+    .alert {
+        padding: 12px 4px;
+        gap: 10px;
+    }
+
+    .alert-icon {
+        min-width: 32px;
+        width: 32px;
+        height: 32px;
+    }
+
+    .alert h4 {
+        font-size: 12px;
+    }
+
+    .alert p {
+        font-size: 10px;
+        line-height: 1.5;
+    }
+
+    /* Table */
+
+    .table-card {
+        overflow: hidden;
+    }
+
+    .table-card .card-header {
+        align-items: center;
+    }
+
+    .table-card input {
+        width: 100%;
+        max-width: 160px;
+        font-size: 11px;
+    }
+
+    .table-wrapper {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    table {
+        min-width: 650px;
+    }
+
+    /* Footer */
+
+    .footer {
+        font-size: 9px;
+        line-height: 1.5;
+        padding: 15px 5px;
+    }
+
+}
+
+/* ==========================================
+   VERY SMALL PHONES
+   ========================================== */
+
+@media (max-width: 380px) {
+
+    .main {
+        padding: 15px 9px;
+    }
+
+    .stats {
+        gap: 8px;
+    }
+
+    .card {
+        padding: 12px;
+    }
+
+    .stat h3 {
+        font-size: 17px;
+    }
+
+    .stat p {
+        font-size: 9px;
+    }
+
+    .header h1 {
+        font-size: 20px;
+    }
+
+    .risk-circle {
+        width: 105px;
+        height: 105px;
+    }
+
+}
+```
+
+</style>
+
+</head>
+
+
+<body>
+
+
+<!-- ================= SIDEBAR ================= -->
+
+<aside class="sidebar">
+
+    <div class="logo">
+
+        <div class="logo-icon">
+            🏛️
+        </div>
+
+        <div>
+
+            <h2>MPLADS AI</h2>
+
+            <span>
+                Smart Governance
+            </span>
+
+        </div>
+
+    </div>
+
+
+    <div class="menu">
+
+        <div class="menu-item active">
+            <span>📊</span>
+            Dashboard
+        </div>
+
+        <div class="menu-item">
+            <span>📁</span>
+            Projects
+        </div>
+
+        <div class="menu-item">
+            <span>🚨</span>
+            Anomalies
+        </div>
+
+        <div class="menu-item">
+            <span>📍</span>
+            Geo Monitoring
+        </div>
+
+        <div class="menu-item">
+            <span>💰</span>
+            Fund Tracking
+        </div>
+
+        <div class="menu-item">
+            <span>📈</span>
+            Analytics
+        </div>
+
+        <div class="menu-item">
+            <span>⚙️</span>
+            Settings
+        </div>
+
+    </div>
+
+</aside>
+
+
+
+<!-- ================= MAIN ================= -->
+
+<main class="main">
+
+
+<!-- HEADER -->
+
+<header class="header">
+
+    <div>
+
+        <h1>
+            AI Governance Dashboard
+        </h1>
+
+        <p>
+            Monitoring MPLADS projects using intelligent anomaly detection
+        </p>
+
+    </div>
+
+
+    <div class="user">
+
+        <div>
+
+            <strong>
+                District Monitoring Officer
+            </strong>
+
+            <p style="text-align:right;">
+                Madhya Pradesh
+            </p>
+
+        </div>
+
+        <div class="avatar">
+            DM
+        </div>
+
+    </div>
+
+</header>
+
+
+
+<!-- ================= STATISTICS ================= -->
+
+<section class="stats fade">
+
+
+    <div class="card stat">
+
+        <div class="stat-icon">
+            💰
+        </div>
+
+        <h3>
+            ₹42.8 Cr
+        </h3>
+
+        <p>
+            Total Funds Allocated
+        </p>
+
+    </div>
+
+
+    <div class="card stat">
+
+        <div class="stat-icon">
+            📁
+        </div>
+
+        <h3>
+            1,284
+        </h3>
+
+        <p>
+            Total Projects
+        </p>
+
+    </div>
+
+
+    <div class="card stat">
+
+        <div class="stat-icon">
+            ✅
+        </div>
+
+        <h3 class="green">
+            91.4%
+        </h3>
+
+        <p>
+            Projects Completed
+        </p>
+
+    </div>
+
+
+    <div class="card stat">
+
+        <div class="stat-icon">
+            🚨
+        </div>
+
+        <h3 class="red">
+            37
+        </h3>
+
+        <p>
+            Anomalies Detected
+        </p>
+
+    </div>
+
+
+</section>
+
+
+
+<!-- ================= PROJECT INPUT ================= -->
+
+<section class="card input-card fade">
+
+    <div class="card-header">
+
+        <h2>
+            🔍 Analyze MPLADS Project
+        </h2>
+
+        <span class="badge">
+            AI POWERED
+        </span>
+
+    </div>
+
+
+    <div class="input-grid">
+
+
+        <div class="input-group">
+
+            <label>
+                Project Budget (₹)
+            </label>
+
+            <input
+                type="number"
+                id="budget"
+                value="5000000"
+            >
+
+        </div>
+
+
+        <div class="input-group">
+
+            <label>
+                Amount Spent (₹)
+            </label>
+
+            <input
+                type="number"
+                id="spent"
+                value="4200000"
+            >
+
+        </div>
+
+
+        <div class="input-group">
+
+            <label>
+                Physical Progress (%)
+            </label>
+
+            <input
+                type="number"
+                id="physical_progress"
+                value="25"
+                min="0"
+                max="100"
+            >
+
+        </div>
+
+
+        <div class="input-group">
+
+            <label>
+                Days Elapsed
+            </label>
+
+            <input
+                type="number"
+                id="days_elapsed"
+                value="30"
+            >
+
+        </div>
+
+
+        <div class="input-group">
+
+            <label>
+                Expected Duration (Days)
+            </label>
+
+            <input
+                type="number"
+                id="expected_duration"
+                value="180"
+            >
+
+        </div>
+
+
+        <div class="input-group">
+
+            <label>
+                Number of Vendors
+            </label>
+
+            <input
+                type="number"
+                id="vendors"
+                value="1"
+                min="1"
+            >
+
+        </div>
+
+
+    </div>
+
+
+</section>
+
+
+
+<!-- ================= CHART + AI ================= -->
+
+<section class="grid fade">
+
+
+    <!-- CHART -->
+
+    <div class="card">
+
+        <div class="card-header">
+
+            <h2>
+                Fund Utilization Trend
+            </h2>
+
+            <span class="badge">
+                AI MONITORED
+            </span>
+
+        </div>
+
+
+        <div class="chart-container">
+
+            <canvas id="fundChart"></canvas>
+
+        </div>
+
+    </div>
+
+
+
+    <!-- AI PANEL -->
+
+    <div class="card ai-panel">
+
+
+        <div class="ai-title">
+
+            <div class="ai-icon">
+                🤖
+            </div>
+
+            <div>
+
+                <h2>
+                    AI Risk Engine
+                </h2>
+
+                <small style="opacity:.6;">
+                    Real-time ML analysis
+                </small>
+
+            </div>
+
+        </div>
+
+
+
+        <div class="risk">
+
+            <div
+                class="risk-circle"
+                id="riskCircle"
+            >
+
+                <strong id="riskScore">
+                    --
+                </strong>
+
+                <small id="riskLevel">
+                    READY
+                </small>
+
+            </div>
+
+        </div>
+
+
+
+        <div
+            class="ai-status"
+            id="aiStatus"
+        >
+
+            <div>
+                🤖 AI model ready
+            </div>
+
+            <br>
+
+            <div>
+                Enter project information
+            </div>
+
+            <br>
+
+            <div>
+                Click the button to analyze
+            </div>
+
+        </div>
+
+
+
+        <button
+            class="ai-button"
+            id="analyzeButton"
+            onclick="analyzeProject()"
+        >
+
+            🤖 RUN AI ANOMALY SCAN
+
+        </button>
+
+
+
+        <div
+            class="ai-result"
+            id="aiResult"
+        >
+
+            <h3>
+                AI Explanation
+            </h3>
+
+            <ul id="reasonList"></ul>
+
+        </div>
+
+
+    </div>
+
+
+</section>
+
+
+
+<!-- ================= ALERTS ================= -->
+
+<section
+    class="card fade"
+    style="margin-bottom:20px;"
+>
+
+
+    <div class="card-header">
+
+        <h2>
+            🚨 AI Detected Anomalies
+        </h2>
+
+        <span class="badge">
+            37 ACTIVE
+        </span>
+
+    </div>
+
+
+    <div class="alert">
+
+        <div class="alert-icon alert-danger">
+            ⚠
+        </div>
+
+        <div>
+
+            <h4>
+                Unusual Fund Utilization
+            </h4>
+
+            <p>
+                Project #MP-2847 shows 82% expenditure within 9 days.
+            </p>
+
+        </div>
+
+    </div>
+
+
+
+    <div class="alert">
+
+        <div class="alert-icon alert-warning">
+            !
+        </div>
+
+        <div>
+
+            <h4>
+                Timeline Deviation
+            </h4>
+
+            <p>
+                Infrastructure project delayed by 47 days compared to expected schedule.
+            </p>
+
+        </div>
+
+    </div>
+
+
+
+    <div class="alert">
+
+        <div class="alert-icon alert-info">
+            🔍
+        </div>
+
+        <div>
+
+            <h4>
+                Duplicate Vendor Pattern
+            </h4>
+
+            <p>
+                AI detected similar vendor activity across 4 projects.
+            </p>
+
+        </div>
+
+    </div>
+
+
+</section>
+
+
+
+<!-- ================= PROJECT TABLE ================= -->
+
+<section class="card table-card fade">
+
+
+    <div class="card-header">
+
+        <h2>
+            Project Monitoring
+        </h2>
+
+        <div>
+
+            <input
+                type="text"
+                id="search"
+                placeholder="🔎 Search project..."
+                style="
+                    padding:9px 13px;
+                    border:1px solid #e0e5ec;
+                    border-radius:8px;
+                    outline:none;
+                "
+            >
+
+        </div>
+
+    </div>
+
+
+
+    <table>
+
+        <thead>
+
+            <tr>
+
+                <th>
+                    Project
+                </th>
+
+                <th>
+                    Location
+                </th>
+
+                <th>
+                    Budget
+                </th>
+
+                <th>
+                    Utilization
+                </th>
+
+                <th>
+                    AI Risk
+                </th>
+
+                <th>
+                    Status
+                </th>
+
+            </tr>
+
+        </thead>
+
+
+
+        <tbody id="projectTable">
+
+
+            <tr>
+
+                <td>
+
+                    <div class="project">
+
+                        <div class="project-icon">
+                            🏫
+                        </div>
+
+                        Government School
+
+                    </div>
+
+                </td>
+
+                <td>
+                    Jabalpur
+                </td>
+
+                <td>
+                    ₹28 L
+                </td>
+
+                <td>
+
+                    <div class="progress-bar">
+
+                        <div
+                            class="progress-fill"
+                            style="width:82%"
+                        ></div>
+
+                    </div>
+
+                </td>
+
+                <td class="green">
+                    Low
+                </td>
+
+                <td>
+
+                    <span class="status completed">
+                        Completed
+                    </span>
+
+                </td>
+
+            </tr>
+
+
+
+            <tr>
+
+                <td>
+
+                    <div class="project">
+
+                        <div class="project-icon">
+                            🛣️
+                        </div>
+
+                        Road Development
+
+                    </div>
+
+                </td>
+
+                <td>
+                    Indore
+                </td>
+
+                <td>
+                    ₹65 L
+                </td>
+
+                <td>
+
+                    <div class="progress-bar">
+
+                        <div
+                            class="progress-fill"
+                            style="width:61%"
+                        ></div>
+
+                    </div>
+
+                </td>
+
+                <td class="orange">
+                    Medium
+                </td>
+
+                <td>
+
+                    <span class="status progress">
+                        In Progress
+                    </span>
+
+                </td>
+
+            </tr>
+
+
+
+            <tr>
+
+                <td>
+
+                    <div class="project">
+
+                        <div class="project-icon">
+                            🏥
+                        </div>
+
+                        Health Centre
+
+                    </div>
+
+                </td>
+
+                <td>
+                    Bhopal
+                </td>
+
+                <td>
+                    ₹42 L
+                </td>
+
+                <td>
+
+                    <div class="progress-bar">
+
+                        <div
+                            class="progress-fill"
+                            style="width:94%"
+                        ></div>
+
+                    </div>
+
+                </td>
+
+                <td class="red">
+                    High
+                </td>
+
+                <td>
+
+                    <span class="status flagged">
+                        Flagged
+                    </span>
+
+                </td>
+
+            </tr>
+
+
+
+            <tr>
+
+                <td>
+
+                    <div class="project">
+
+                        <div class="project-icon">
+                            💧
+                        </div>
+
+                        Water Facility
+
+                    </div>
+
+                </td>
+
+                <td>
+                    Rewa
+                </td>
+
+                <td>
+                    ₹31 L
+                </td>
+
+                <td>
+
+                    <div class="progress-bar">
+
+                        <div
+                            class="progress-fill"
+                            style="width:73%"
+                        ></div>
+
+                    </div>
+
+                </td>
+
+                <td class="green">
+                    Low
+                </td>
+
+                <td>
+
+                    <span class="status progress">
+                        In Progress
+                    </span>
+
+                </td>
+
+            </tr>
+
+
+        </tbody>
+
+    </table>
+
+
+</section>
+
+
+
+<div class="footer">
+
+    MPLADS AI Sentinel • AI-assisted public fund monitoring prototype • SIH 2026
+
+</div>
+
+
+</main>
+
+
+
+<!-- ================= JAVASCRIPT ================= -->
+
+<script>
+
+
+/* ==========================================
+   AI ANALYSIS
+   ========================================== */
+
+async function analyzeProject() {
+
+
+    const button =
+        document.getElementById("analyzeButton");
+
+
+    const scoreElement =
+        document.getElementById("riskScore");
+
+
+    const levelElement =
+        document.getElementById("riskLevel");
+
+
+    const statusElement =
+        document.getElementById("aiStatus");
+
+
+    const resultElement =
+        document.getElementById("aiResult");
+
+
+    const reasonList =
+        document.getElementById("reasonList");
+
+
+    const circle =
+        document.getElementById("riskCircle");
+
+
+    /* Get values from the form */
+
+    const budget =
+        Number(
+            document.getElementById("budget").value
+        );
+
+
+    const spent =
+        Number(
+            document.getElementById("spent").value
+        );
+
+
+    const physicalProgress =
+        Number(
+            document.getElementById("physical_progress").value
+        );
+
+
+    const daysElapsed =
+        Number(
+            document.getElementById("days_elapsed").value
+        );
+
+
+    const expectedDuration =
+        Number(
+            document.getElementById("expected_duration").value
+        );
+
+
+    const vendors =
+        Number(
+            document.getElementById("vendors").value
+        );
+
+
+    /* Basic validation */
+
+    if (
+        budget <= 0 ||
+        spent < 0 ||
+        physicalProgress < 0 ||
+        daysElapsed < 0 ||
+        expectedDuration <= 0 ||
+        vendors <= 0
+    ) {
+
+        alert(
+            "Please enter valid project information."
+        );
+
+        return;
+
+    }
+
+
+    /* Data sent to Python */
+
+    const projectData = {
+
+        budget: budget,
+
+        spent: spent,
+
+        physical_progress:
+            physicalProgress,
+
+        days_elapsed:
+            daysElapsed,
+
+        expected_duration:
+            expectedDuration,
+
+        vendors: vendors
+
+    };
+
+
+    /* Loading state */
+
+    button.disabled = true;
+
+    button.innerText =
+        "⏳ AI ANALYZING...";
+
+
+    statusElement.innerHTML =
+
+        "🧠 Machine-learning model analyzing project...";
+
+
+    try {
+
+
+        /* Send data to Flask */
+
+        const response = await fetch(
+
+            "http://127.0.0.1:5000/analyze",
+
+            {
+
+                method: "POST",
+
+                headers: {
+
+                    "Content-Type":
+                        "application/json"
+
+                },
+
+                body:
+                    JSON.stringify(projectData)
+
+            }
+
+        );
+
+
+        const result =
+            await response.json();
+
+
+        /* Check backend error */
+
+        if (!response.ok) {
+
+            throw new Error(
+                result.error ||
+                "AI server returned an error."
+            );
+
+        }
+
+
+        console.log(
+            "REAL AI RESULT:",
+            result
+        );
+
+
+        /* Display risk score */
+
+        scoreElement.innerText =
+            result.risk_score;
+
+
+        levelElement.innerText =
+            result.risk_level;
+
+
+        /* Change circle */
+
+        if (
+            result.risk_level === "HIGH"
+        ) {
+
+            circle.style.borderColor =
+                "#e44747";
+
+        }
+
+        else if (
+            result.risk_level === "MEDIUM"
+        ) {
+
+            circle.style.borderColor =
+                "#e89a17";
+
+        }
+
+        else {
+
+            circle.style.borderColor =
+                "#27c78a";
+
+        }
+
+
+        /* AI status */
+
+        statusElement.innerHTML =
+
+            "✓ Financial Progress: " +
+            result.financial_progress +
+            "%<br><br>" +
+
+            "✓ Physical Progress: " +
+            result.physical_progress +
+            "%<br><br>" +
+
+            (
+                result.anomaly
+                ? "⚠ Statistical anomaly detected"
+                : "✓ No statistical anomaly detected"
+            );
+
+
+        /* Reasons */
+
+        reasonList.innerHTML = "";
+
+
+        result.reasons.forEach(
+            function(reason) {
+
+                const li =
+                    document.createElement("li");
+
+                li.innerText =
+                    reason;
+
+                reasonList.appendChild(li);
+
+            }
+        );
+
+
+        resultElement.style.display =
+            "block";
+
+
+        /* Button */
+
+        button.innerText =
+            "🔄 RUN AI SCAN AGAIN";
+
+
+    }
+
+    catch (error) {
+
+
+        console.error(
+            "AI ERROR:",
+            error
+        );
+
+
+        statusElement.innerHTML =
+
+            "❌ Could not connect to AI server.<br><br>" +
+
+            "Make sure your Python server is running:";
+
+
+        button.innerText =
+            "🤖 TRY AGAIN";
+
+
+        alert(
+            "AI connection failed.\n\n" +
+            "Make sure 'py app.py' is running."
+        );
+
+    }
+
+
+    button.disabled = false;
+
+}
+
+
+
+/* ==========================================
+   FUND CHART
+   ========================================== */
+
+const ctx =
+    document.getElementById(
+        "fundChart"
+    );
+
+
+new Chart(
+    ctx,
+    {
+
+        type: "line",
+
+        data: {
+
+            labels: [
+                "Jan",
+                "Feb",
+                "Mar",
+                "Apr",
+                "May",
+                "Jun",
+                "Jul",
+                "Aug"
+            ],
+
+            datasets: [
+
+                {
+
+                    label:
+                        "Allocated Funds",
+
+                    data: [
+                        42,
+                        42,
+                        42,
+                        42,
+                        42,
+                        42,
+                        42,
+                        42
+                    ],
+
+                    borderWidth: 2,
+
+                    tension: .4
+
+                },
+
+                {
+
+                    label:
+                        "Utilized Funds",
+
+                    data: [
+                        8,
+                        12,
+                        16,
+                        21,
+                        25,
+                        29,
+                        34,
+                        38
+                    ],
+
+                    borderWidth: 3,
+
+                    tension: .4
+
+                }
+
+            ]
+
+        },
+
+        options: {
+
+            responsive: true,
+
+            maintainAspectRatio: false,
+
+            plugins: {
+
+                legend: {
+
+                    position: "bottom"
+
+                }
+
+            },
+
+            scales: {
+
+                y: {
+
+                    beginAtZero: true,
+
+                    title: {
+
+                        display: true,
+
+                        text: "₹ Crore"
+
+                    }
+
+                }
+
+            }
+
+        }
+
+    }
+);
+
+
+
+/* ==========================================
+   SEARCH
+   ========================================== */
+
+document
+    .getElementById("search")
+    .addEventListener(
+        "keyup",
+        function() {
+
+
+            let value =
+                this.value.toLowerCase();
+
+
+            let rows =
+                document.querySelectorAll(
+                    "#projectTable tr"
+                );
+
+
+            rows.forEach(
+                function(row) {
+
+                    row.style.display =
+
+                        row.innerText
+                            .toLowerCase()
+                            .includes(value)
+
+                        ? ""
+
+                        : "none";
+
+                }
+            );
+
+
+        }
+    );
+
+
+
+/* ==========================================
+   MENU INTERACTION
+   ========================================== */
+
+document
+    .querySelectorAll(".menu-item")
+    .forEach(
+        function(item) {
+
+            item.addEventListener(
+                "click",
+                function() {
+
+
+                    document
+                        .querySelectorAll(".menu-item")
+                        .forEach(
+                            function(x) {
+
+                                x.classList.remove(
+                                    "active"
+                                );
+
+                            }
+                        );
+
+
+                    this.classList.add(
+                        "active"
+                    );
+
+
+                }
+            );
+
+        }
+    );
+
+
+</script>
+
+
+</body>
+
+</html>
