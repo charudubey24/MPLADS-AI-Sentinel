@@ -138,6 +138,28 @@ body::before{
 .menu-item.active{
     box-shadow:inset 3px 0 var(--lobster);
 }
+.upload-button {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    padding: 7px 12px;
+    border-radius: 20px;
+    border: 1px solid rgba(232, 93, 117, 0.35);
+    background: rgba(232, 93, 117, 0.08);
+    color: #6F294A;
+    font-family: "DM Mono", monospace;
+    font-size: 9px;
+    font-weight: 500;
+    letter-spacing: .06em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: .2s ease;
+}
+
+.upload-button:hover {
+    background: rgba(232, 93, 117, 0.16);
+    transform: translateY(-1px);
+}
 
 .menu-item span{margin-right:12px;}
 
@@ -918,6 +940,10 @@ tbody tr:hover{background:rgba(232,215,196,.25);}
         </p>
 
     </div>
+    <label class="upload-button">
+    📷 Upload
+    <input type="file" id="projectUpload" accept="image/*,.pdf" hidden>
+</label>
 
 
     <div class="card stat">
