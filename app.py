@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify,render_template
 from flask_cors import CORS
 
 from model import analyze_project
@@ -10,8 +10,8 @@ CORS(app)
 
 @app.route("/")
 def home():
-    return "MPLADS AI SERVER IS WORKING"
-
+    return render_template("sih3.html")
+    
 
 @app.route("/analyze", methods=["POST"])
 def analyze():
