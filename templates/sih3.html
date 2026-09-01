@@ -141,24 +141,38 @@ body::before{
 .upload-button {
     display: inline-flex;
     align-items: center;
-    gap: 7px;
-    padding: 7px 12px;
-    border-radius: 20px;
-    border: 1px solid rgba(232, 93, 117, 0.35);
-    background: rgba(232, 93, 117, 0.08);
+    justify-content: center;
+    gap: 8px;
+
+    padding: 10px 18px;
+    min-width: 125px;
+
+    border-radius: 12px;
+    border: 1px solid rgba(232, 93, 117, 0.45);
+
+    background: rgba(232, 93, 117, 0.10);
     color: #6F294A;
+
     font-family: "DM Mono", monospace;
-    font-size: 9px;
-    font-weight: 500;
+    font-size: 11px;
+    font-weight: 600;
     letter-spacing: .06em;
     text-transform: uppercase;
+
     cursor: pointer;
-    transition: .2s ease;
+    transition: all .25s ease;
 }
 
 .upload-button:hover {
-    background: rgba(232, 93, 117, 0.16);
-    transform: translateY(-1px);
+    background: #E85D75;
+    color: white;
+    border-color: #E85D75;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(232, 93, 117, .20);
+}
+
+.upload-button:active {
+    transform: translateY(0);
 }
 
 .menu-item span{margin-right:12px;}
